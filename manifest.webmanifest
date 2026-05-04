@@ -1,0 +1,19 @@
+{
+  "name": "Escala de Cultos Premium",
+  "short_name": "Escala Cultos",
+  "description": "Organize e exporte a escala mensal de cultos em imagem vertical 1080 x 1920.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eff2ed",
+  "theme_color": "#18201f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

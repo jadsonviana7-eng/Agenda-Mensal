@@ -1,0 +1,1254 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#18201f">
+<title>Escala de Cultos Premium</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<script src="html2canvas.min.js"></script>
+<script src="logo-data.js"></script>
+
+<style>
+:root {
+    --bg: #eff2ed;
+    --surface: #ffffff;
+    --surface-2: #f8f6f0;
+    --ink: #18201f;
+    --muted: #66706c;
+    --line: #dde2dc;
+    --primary: #223c36;
+    --accent: #a36f3f;
+    --accent-2: #2f6f72;
+    --shadow: 0 18px 45px rgba(20, 30, 28, 0.12);
+    --radius: 8px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top left, rgba(47, 111, 114, 0.16), transparent 32rem),
+        linear-gradient(180deg, #f6f7f3 0%, var(--bg) 45%, #e7ebe5 100%);
+    padding-bottom: 112px;
+}
+
+button,
+select,
+input {
+    font: inherit;
+}
+
+.app-shell {
+    width: min(1040px, 100%);
+    margin: 0 auto;
+    padding: 22px 16px 0;
+}
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 14px 0;
+    backdrop-filter: blur(18px);
+}
+
+.topbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+    color: #fff;
+    background: linear-gradient(135deg, #18201f 0%, #223c36 58%, #2f6f72 100%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.brand-logo {
+    width: 150px;
+    height: 54px;
+    object-fit: contain;
+    padding: 6px;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.94);
+}
+
+.brand-kicker {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.68);
+}
+
+h1 {
+    margin: 5px 0 0;
+    font-size: clamp(28px, 5vw, 48px);
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.select-wrap {
+    display: grid;
+    gap: 6px;
+}
+
+.select-wrap label,
+.field label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.topbar .select-wrap label {
+    color: rgba(255, 255, 255, 0.68);
+}
+
+select {
+    min-height: 44px;
+    min-width: 132px;
+    padding: 0 36px 0 13px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius);
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+input {
+    min-height: 44px;
+    width: 100%;
+    padding: 0 13px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 4px rgba(47, 111, 114, 0.18);
+}
+
+select:focus {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 0 4px rgba(47, 111, 114, 0.18);
+}
+
+.summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.metric {
+    min-height: 86px;
+    padding: 15px;
+    border: 1px solid rgba(24, 32, 31, 0.08);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 12px 28px rgba(20, 30, 28, 0.07);
+}
+
+.metric span {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.metric strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 28px;
+}
+
+.settings-panel {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid rgba(24, 32, 31, 0.08);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 12px 28px rgba(20, 30, 28, 0.07);
+}
+
+.settings-panel summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    list-style: none;
+    cursor: pointer;
+}
+
+.settings-panel summary::-webkit-details-marker {
+    display: none;
+}
+
+.settings-panel summary::after {
+    content: "+";
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--primary);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.settings-panel[open] summary::after {
+    content: "-";
+}
+
+.settings-body {
+    display: grid;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.panel-head h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.panel-head span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.person-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+}
+
+.person-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.person-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 4px 6px 4px 11px;
+    border: 1px solid #dce4df;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.person-remove {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 50%;
+    color: var(--muted);
+    background: #edf2ef;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.month-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+    gap: 14px;
+}
+
+.card-app {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid rgba(24, 32, 31, 0.08);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 14px 32px rgba(20, 30, 28, 0.09);
+}
+
+.card-app::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+}
+
+.date-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-left: 4px;
+}
+
+.date-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.date-badge strong {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.date-badge span {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.chip {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: var(--primary);
+    background: #edf5f2;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.field {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+}
+
+.field label {
+    color: var(--muted);
+}
+
+.field select {
+    width: 100%;
+    min-width: 0;
+    border-color: var(--line);
+    background-color: var(--surface-2);
+    box-shadow: none;
+}
+
+.actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(239, 242, 237, 0), rgba(239, 242, 237, 0.94) 28%, rgba(239, 242, 237, 0.98));
+}
+
+.actions-inner {
+    display: flex;
+    gap: 10px;
+    width: min(600px, 100%);
+    margin: 0 auto;
+}
+
+.btn {
+    min-height: 54px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: var(--radius);
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-export {
+    flex: 1;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), #18201f);
+    box-shadow: 0 18px 32px rgba(24, 32, 31, 0.22);
+}
+
+.btn-secondary {
+    color: var(--primary);
+    background: #fff;
+    border: 1px solid var(--line);
+}
+
+.status {
+    min-height: 18px;
+    margin-top: 8px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#exportArea {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #eff2ed;
+    pointer-events: none;
+    transform: translateX(-150vw);
+    z-index: -1;
+}
+
+#exportArea.is-capturing {
+    transform: none;
+    z-index: 9999;
+}
+
+.export-page {
+    width: 1080px;
+    height: 1920px;
+    padding: 42px;
+    color: #18201f;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.13), transparent 38%),
+        linear-gradient(135deg, var(--export-bg-a) 0%, var(--export-bg-b) 48%, var(--export-bg-c) 100%);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.export-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 16px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.export-header-card,
+.export-list-panel {
+    border: 0;
+    border-radius: 34px;
+    background: var(--export-panel);
+    box-shadow: none;
+}
+
+.export-header-card {
+    padding: 22px 30px 24px;
+}
+
+.export-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.export-logo {
+    width: 480px;
+    height: 154px;
+    object-fit: contain;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.export-kicker {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--export-accent);
+    text-shadow: none;
+}
+
+.export-title {
+    margin-top: 2px;
+    font-size: 66px;
+    line-height: 0.94;
+    font-weight: 900;
+    letter-spacing: 0;
+    color: var(--export-ink);
+    text-shadow: none;
+}
+
+.export-year {
+    display: grid;
+    place-items: center;
+    width: auto;
+    height: auto;
+    padding: 7px 17px;
+    border-radius: 999px;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--export-pill-a), var(--export-pill-b));
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.export-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 0;
+}
+
+.export-stat {
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--export-card);
+    box-shadow: none;
+    text-align: center;
+}
+
+.export-stat span {
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--export-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.export-stat strong {
+    display: block;
+    margin-top: 5px;
+    color: var(--export-ink);
+    font-size: 28px;
+}
+
+.export-list-panel {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    padding: 20px 20px 26px;
+}
+
+.export-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+}
+
+.export-item {
+    display: grid;
+    grid-template-columns: 152px 1fr;
+    gap: 24px;
+    align-items: center;
+    flex: 1;
+    min-height: 112px;
+    padding: 18px 24px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--export-card);
+    box-shadow: none;
+}
+
+.export-date {
+    text-align: center;
+}
+
+.export-date span {
+    display: block;
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--export-accent);
+    text-transform: uppercase;
+}
+
+.export-date strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 54px;
+    line-height: 1;
+}
+
+.export-roles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.export-role {
+    min-width: 0;
+}
+
+.export-role span {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--export-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.export-role strong {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 27px;
+    line-height: 1.12;
+}
+
+.export-foot {
+    margin-top: 0;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.26);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+@media (max-width: 720px) {
+    .app-shell {
+        padding-inline: 12px;
+    }
+
+    .topbar {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-logo {
+        width: 132px;
+        height: 48px;
+    }
+
+    .toolbar {
+        justify-content: stretch;
+    }
+
+    .select-wrap {
+        flex: 1;
+    }
+
+    select {
+        width: 100%;
+    }
+
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
+
+    .person-form {
+        grid-template-columns: 1fr;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+<main class="app-shell">
+    <header class="app-header">
+        <div class="topbar">
+            <div class="brand-lockup">
+                <img class="brand-logo" id="brandLogo" src="logo.png" alt="Logo da igreja" crossorigin="anonymous">
+                <div>
+                    <div class="brand-kicker">Agenda Mensal Ministerial</div>
+                    <h1>Escala de Cultos</h1>
+                </div>
+            </div>
+
+            <div class="toolbar" aria-label="Filtros da escala">
+                <div class="select-wrap">
+                    <label for="mes">Mês</label>
+                    <select id="mes"></select>
+                </div>
+
+                <div class="select-wrap">
+                    <label for="ano">Ano</label>
+                    <select id="ano"></select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="summary-row" aria-label="Resumo do mês">
+        <div class="metric">
+            <span>Cultos</span>
+            <strong id="totalCultos">0</strong>
+        </div>
+        <div class="metric">
+            <span>Domingos</span>
+            <strong id="totalDomingos">0</strong>
+        </div>
+        <div class="metric">
+            <span>Quintas</span>
+            <strong id="totalQuintas">0</strong>
+        </div>
+    </section>
+
+    <details class="settings-panel" aria-label="Configurações da escala">
+        <summary>
+            <div>
+                <h2>Configurações</h2>
+                <span>Gerencie os nomes usados nos campos da escala.</span>
+            </div>
+        </summary>
+
+        <div class="settings-body">
+            <form class="person-form" id="formPessoa">
+                <input id="nomePessoa" type="text" autocomplete="off" placeholder="Ex.: Ir. Maria, Pr. João">
+                <button class="btn btn-secondary" type="submit">Adicionar</button>
+            </form>
+
+            <div class="person-list" id="listaPessoas"></div>
+        </div>
+    </details>
+
+    <section class="month-list" id="lista" aria-label="Lista de cultos"></section>
+</main>
+
+<div class="actions">
+    <div class="actions-inner">
+        <button id="btnInstalar" class="btn btn-secondary" hidden>Instalar app</button>
+        <button id="btnExportar" class="btn btn-export">Gerar imagem 1080 x 1920</button>
+    </div>
+    <div class="status" id="status"></div>
+</div>
+
+<div id="exportArea" aria-hidden="true"></div>
+
+<script>
+const pessoasPadrao = ["Pr. Jadson", "Pra. Aninha", "Naftali", "Alexsandro", "Jakciel", "José Cícero"];
+const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta-feira", "Sexta", "Sábado"];
+
+const $ = (selector) => document.querySelector(selector);
+const mes = $("#mes");
+const ano = $("#ano");
+const lista = $("#lista");
+const statusEl = $("#status");
+const btnExportar = $("#btnExportar");
+const btnInstalar = $("#btnInstalar");
+const formPessoa = $("#formPessoa");
+const nomePessoa = $("#nomePessoa");
+const listaPessoas = $("#listaPessoas");
+const brandLogo = $("#brandLogo");
+
+let installPrompt = null;
+let pessoas = carregarPessoas();
+
+function obterLogoSrc() {
+    return window.LOGO_DATA_URL || "logo.png";
+}
+
+brandLogo.src = obterLogoSrc();
+
+meses.forEach((m, i) => mes.insertAdjacentHTML("beforeend", `<option value="${i}">${m}</option>`));
+for (let a = 2024; a <= 2030; a++) ano.insertAdjacentHTML("beforeend", `<option>${a}</option>`);
+
+mes.value = new Date().getMonth();
+ano.value = new Date().getFullYear();
+
+function storageKey(a = ano.value, m = mes.value, d = "") {
+    return `${a}-${m}-${d}`;
+}
+
+function carregarPessoas() {
+    const salvas = JSON.parse(localStorage.getItem("escala-pessoas") || "null");
+    return Array.isArray(salvas) && salvas.length ? salvas : pessoasPadrao;
+}
+
+function salvarPessoas() {
+    localStorage.setItem("escala-pessoas", JSON.stringify(pessoas));
+}
+
+function renderizarPessoas() {
+    listaPessoas.innerHTML = pessoas.map((pessoa, index) => `
+        <span class="person-pill">
+            ${escapeHtml(pessoa)}
+            <button class="person-remove" type="button" data-index="${index}" aria-label="Remover ${escapeHtml(pessoa)}">×</button>
+        </span>
+    `).join("");
+}
+
+function adicionarPessoa(nome) {
+    const novoNome = nome.trim().replace(/\s+/g, " ");
+    if (!novoNome) return;
+
+    const existe = pessoas.some((pessoa) => pessoa.toLowerCase() === novoNome.toLowerCase());
+    if (existe) {
+        statusEl.textContent = "Esse nome já está na lista.";
+        return;
+    }
+
+    pessoas = [...pessoas, novoNome].sort((a, b) => a.localeCompare(b, "pt-BR"));
+    salvarPessoas();
+    gerar();
+    renderizarPessoas();
+    statusEl.textContent = "Nome adicionado à escala.";
+}
+
+function removerPessoa(index) {
+    pessoas = pessoas.filter((_, pessoaIndex) => pessoaIndex !== index);
+    salvarPessoas();
+    gerar();
+    renderizarPessoas();
+    statusEl.textContent = "Nome removido da lista.";
+}
+
+function obterCultos() {
+    const m = Number(mes.value);
+    const a = Number(ano.value);
+    const dias = new Date(a, m + 1, 0).getDate();
+    const cultos = [];
+
+    for (let d = 1; d <= dias; d++) {
+        const data = new Date(a, m, d);
+        const semana = data.getDay();
+
+        if (semana === 0 || semana === 4) {
+            cultos.push({
+                id: storageKey(a, m, d),
+                dia: String(d).padStart(2, "0"),
+                diaNumero: d,
+                tipo: diasSemana[semana],
+                semana
+            });
+        }
+    }
+
+    return cultos;
+}
+
+function optionPessoas() {
+    return `<option value="">Selecionar</option>${pessoas.map((p) => `<option>${p}</option>`).join("")}`;
+}
+
+function atualizarResumo(cultos) {
+    $("#totalCultos").textContent = cultos.length;
+    $("#totalDomingos").textContent = cultos.filter((culto) => culto.semana === 0).length;
+    $("#totalQuintas").textContent = cultos.filter((culto) => culto.semana === 4).length;
+}
+
+function gerar() {
+    const cultos = obterCultos();
+    atualizarResumo(cultos);
+
+    lista.innerHTML = cultos.map((culto) => `
+        <article class="card-app" data-id="${culto.id}">
+            <div class="date-row">
+                <div class="date-badge">
+                    <strong>${culto.dia}</strong>
+                    <span>${culto.tipo}</span>
+                </div>
+                <div class="chip">Culto</div>
+            </div>
+
+            <div class="grid">
+                <div class="field">
+                    <label for="dir-${culto.id}">Direção</label>
+                    <select id="dir-${culto.id}" data-tipo="dir" aria-label="Direção do dia ${culto.dia}">
+                        ${optionPessoas()}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="preg-${culto.id}">Pregação</label>
+                    <select id="preg-${culto.id}" data-tipo="preg" aria-label="Pregação do dia ${culto.dia}">
+                        ${optionPessoas()}
+                    </select>
+                </div>
+            </div>
+        </article>
+    `).join("");
+
+    carregar();
+}
+
+function obterDados() {
+    return JSON.parse(localStorage.getItem("escala-cultos") || "{}");
+}
+
+function salvar(id, tipo, valor) {
+    const dados = obterDados();
+    dados[id] = { ...(dados[id] || {}), [tipo]: valor };
+    localStorage.setItem("escala-cultos", JSON.stringify(dados));
+    statusEl.textContent = "Alteração salva automaticamente.";
+    setTimeout(() => {
+        if (statusEl.textContent === "Alteração salva automaticamente.") statusEl.textContent = "";
+    }, 1800);
+}
+
+function carregar() {
+    const dados = obterDados();
+
+    document.querySelectorAll(".card-app").forEach((card) => {
+        const registro = dados[card.dataset.id] || {};
+        card.querySelector('[data-tipo="dir"]').value = registro.dir || "";
+        card.querySelector('[data-tipo="preg"]').value = registro.preg || "";
+    });
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function dadosExportacao() {
+    return obterCultos().map((culto) => {
+        const card = document.querySelector(`[data-id="${culto.id}"]`);
+        return {
+            ...culto,
+            direcao: card?.querySelector('[data-tipo="dir"]')?.value || "-",
+            pregacao: card?.querySelector('[data-tipo="preg"]')?.value || "-"
+        };
+    });
+}
+
+const paletasExportacao = [
+    {
+        bgA: "#10231f",
+        bgB: "#2f6f72",
+        bgC: "#d69258",
+        panel: "#e3d7c5",
+        card: "#ffffff",
+        ink: "#17211f",
+        muted: "#66706c",
+        accent: "#9d6235",
+        pillA: "#223c36",
+        pillB: "#2f6f72"
+    },
+    {
+        bgA: "#172033",
+        bgB: "#576cbc",
+        bgC: "#d9a441",
+        panel: "#e7eaf3",
+        card: "#ffffff",
+        ink: "#171b2a",
+        muted: "#5e6578",
+        accent: "#b36b2c",
+        pillA: "#26395f",
+        pillB: "#576cbc"
+    },
+    {
+        bgA: "#1f2933",
+        bgB: "#0f766e",
+        bgC: "#f59e0b",
+        panel: "#e0e7dd",
+        card: "#ffffff",
+        ink: "#17201f",
+        muted: "#5f6b66",
+        accent: "#b45309",
+        pillA: "#134e4a",
+        pillB: "#0f766e"
+    },
+    {
+        bgA: "#251a2f",
+        bgB: "#7c3aed",
+        bgC: "#f97316",
+        panel: "#e9ddf2",
+        card: "#ffffff",
+        ink: "#20162a",
+        muted: "#6c6074",
+        accent: "#c2410c",
+        pillA: "#4c1d95",
+        pillB: "#7c3aed"
+    },
+    {
+        bgA: "#111827",
+        bgB: "#2563eb",
+        bgC: "#10b981",
+        panel: "#dce8ef",
+        card: "#ffffff",
+        ink: "#111827",
+        muted: "#5d6b78",
+        accent: "#047857",
+        pillA: "#1e3a8a",
+        pillB: "#2563eb"
+    },
+    {
+        bgA: "#2a1f1b",
+        bgB: "#b45309",
+        bgC: "#16a34a",
+        panel: "#eadccb",
+        card: "#ffffff",
+        ink: "#231a16",
+        muted: "#76665b",
+        accent: "#15803d",
+        pillA: "#7c2d12",
+        pillB: "#b45309"
+    }
+];
+
+function paletaAleatoria() {
+    return paletasExportacao[Math.floor(Math.random() * paletasExportacao.length)];
+}
+
+function estiloPaleta(paleta) {
+    return [
+        `--export-bg-a:${paleta.bgA}`,
+        `--export-bg-b:${paleta.bgB}`,
+        `--export-bg-c:${paleta.bgC}`,
+        `--export-panel:${paleta.panel}`,
+        `--export-card:${paleta.card}`,
+        `--export-ink:${paleta.ink}`,
+        `--export-muted:${paleta.muted}`,
+        `--export-accent:${paleta.accent}`,
+        `--export-pill-a:${paleta.pillA}`,
+        `--export-pill-b:${paleta.pillB}`
+    ].join(";");
+}
+
+function montarExportacao() {
+    const area = $("#exportArea");
+    const cultos = dadosExportacao();
+    const domingos = cultos.filter((culto) => culto.semana === 0).length;
+    const quintas = cultos.filter((culto) => culto.semana === 4).length;
+    const nomeMes = meses[Number(mes.value)].toUpperCase();
+    const paleta = paletaAleatoria();
+
+    area.innerHTML = `
+        <div class="export-page" style="${estiloPaleta(paleta)}">
+            <div class="export-card">
+                <div class="export-header-card">
+                    <div class="export-head">
+                        <img class="export-logo" src="${escapeHtml(obterLogoSrc())}" alt="" crossorigin="anonymous">
+                        <div>
+                            <div class="export-kicker">Escala de Cultos</div>
+                            <div class="export-title">${escapeHtml(nomeMes)}</div>
+                        </div>
+                        <div class="export-year">${escapeHtml(ano.value)}</div>
+                    </div>
+
+                    <div class="export-stats">
+                        <div class="export-stat"><span>Cultos</span><strong>${cultos.length}</strong></div>
+                        <div class="export-stat"><span>Domingos</span><strong>${domingos}</strong></div>
+                        <div class="export-stat"><span>Quintas</span><strong>${quintas}</strong></div>
+                    </div>
+                </div>
+
+                <div class="export-list-panel">
+                    <div class="export-list">
+                        ${cultos.map((culto) => `
+                            <div class="export-item">
+                                <div class="export-date">
+                                    <span>${escapeHtml(culto.tipo)}</span>
+                                    <strong>${escapeHtml(culto.dia)}</strong>
+                                </div>
+
+                                <div class="export-roles">
+                                    <div class="export-role">
+                                        <span>Direção</span>
+                                        <strong>${escapeHtml(culto.direcao)}</strong>
+                                    </div>
+                                    <div class="export-role">
+                                        <span>Pregação</span>
+                                        <strong>${escapeHtml(culto.pregacao)}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+                <div class="export-foot">Igreja local - escala mensal de responsáveis</div>
+            </div>
+        </div>
+    `;
+}
+
+function esperarImagem(img) {
+    if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+
+    return new Promise((resolve, reject) => {
+        img.addEventListener("load", resolve, { once: true });
+        img.addEventListener("error", reject, { once: true });
+    });
+}
+
+async function prepararExportacao(area) {
+    area.classList.add("is-capturing");
+
+    if (document.fonts?.ready) {
+        await document.fonts.ready;
+    }
+
+    const imagens = [...area.querySelectorAll("img")];
+    await Promise.all(imagens.map((img) => esperarImagem(img).catch(() => undefined)));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+function baixarCanvas(canvas, nomeArquivo) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (!blob) {
+                reject(new Error("Canvas sem imagem gerada."));
+                return;
+            }
+
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.download = nomeArquivo;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1200);
+            resolve();
+        }, "image/jpeg", 0.96);
+    });
+}
+
+async function exportar() {
+    if (!window.html2canvas) {
+        statusEl.textContent = "O gerador de imagem não carregou. Abra com internet uma vez e atualize a página.";
+        return;
+    }
+
+    btnExportar.disabled = true;
+    btnExportar.textContent = "Gerando...";
+    statusEl.textContent = "Preparando imagem 1080 x 1920.";
+    montarExportacao();
+
+    try {
+        const area = $("#exportArea");
+        await prepararExportacao(area);
+
+        const pagina = area.querySelector(".export-page");
+        const canvas = await html2canvas(pagina, {
+            backgroundColor: "#eff2ed",
+            scale: 1,
+            width: 1080,
+            height: 1920,
+            windowWidth: 1080,
+            windowHeight: 1920,
+            scrollX: 0,
+            scrollY: 0,
+            useCORS: true,
+            logging: false
+        });
+
+        const nomeMes = meses[Number(mes.value)].toLowerCase();
+        await baixarCanvas(canvas, `escala-${nomeMes}-${ano.value}-1080x1920.jpg`);
+        statusEl.textContent = "Imagem gerada em 1080 x 1920.";
+    } catch (error) {
+        statusEl.textContent = `Não consegui gerar a imagem: ${error.message || "tente atualizar a página."}`;
+        console.error(error);
+    } finally {
+        $("#exportArea").classList.remove("is-capturing");
+        btnExportar.disabled = false;
+        btnExportar.textContent = "Gerar imagem 1080 x 1920";
+    }
+}
+
+lista.addEventListener("change", (event) => {
+    const select = event.target.closest("select[data-tipo]");
+    if (!select) return;
+    salvar(select.closest(".card-app").dataset.id, select.dataset.tipo, select.value);
+});
+
+formPessoa.addEventListener("submit", (event) => {
+    event.preventDefault();
+    adicionarPessoa(nomePessoa.value);
+    nomePessoa.value = "";
+    nomePessoa.focus();
+});
+
+listaPessoas.addEventListener("click", (event) => {
+    const botao = event.target.closest(".person-remove");
+    if (!botao) return;
+    removerPessoa(Number(botao.dataset.index));
+});
+
+mes.addEventListener("change", gerar);
+ano.addEventListener("change", gerar);
+btnExportar.addEventListener("click", exportar);
+
+window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    btnInstalar.hidden = false;
+});
+
+btnInstalar.addEventListener("click", async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    btnInstalar.hidden = true;
+});
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+}
+
+renderizarPessoas();
+gerar();
+</script>
+</body>
+</html>
