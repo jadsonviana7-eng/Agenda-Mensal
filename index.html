@@ -1,4 +1,4 @@
-p﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -163,8 +163,7 @@ select:focus {
 }
 
 .summary-row {
-    display: flex;
-    flex-direction: row
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin: 16px 0;
@@ -544,7 +543,7 @@ select:focus {
 
 .export-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-row: repeat(3, 1fr);
     gap: 12px;
     margin-bottom: 0;
 }
@@ -624,8 +623,8 @@ select:focus {
 
 .export-roles {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 16px;
 }
 
 .export-role {
@@ -719,6 +718,11 @@ select:focus {
 
             <div class="toolbar" aria-label="Filtros da escala">
                 <div class="select-wrap">
+                    <label for="tipoEscala">Tipo</label>
+                    <select id="tipoEscala"></select>
+                </div>
+
+                <div class="select-wrap">
                     <label for="mes">Mês</label>
                     <select id="mes"></select>
                 </div>
@@ -733,7 +737,7 @@ select:focus {
 
     <section class="summary-row" aria-label="Resumo do mês">
         <div class="metric">
-            <span>Cultos</span>
+            <span>Datas</span>
             <strong id="totalCultos">0</strong>
         </div>
         <div class="metric">
@@ -764,13 +768,13 @@ select:focus {
         </div>
     </details>
 
-    <section class="month-list" id="lista" aria-label="Lista de cultos"></section>
+    <section class="month-list" id="lista" aria-label="Lista da escala"></section>
 </main>
 
 <div class="actions">
     <div class="actions-inner">
         <button id="btnInstalar" class="btn btn-secondary" hidden>Instalar app</button>
-        <button id="btnExportar" class="btn btn-export">Exportar Escala</button>
+        <button id="btnExportar" class="btn btn-export">Compartilhar imagem 1080 x 1920</button>
     </div>
     <div class="status" id="status"></div>
 </div>
@@ -781,8 +785,16 @@ select:focus {
 const pessoasPadrao = ["Pr. Jadson", "Pra. Aninha", "Naftali", "Alexsandro", "Jakciel", "José Cícero"];
 const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta-feira", "Sexta", "Sábado"];
+const CONFIG_ESCALAS = {
+    "Cultos": ["Direção", "Pregação"],
+    "Intercessão": ["Porta", "Altar", "Sala Kids"],
+    "Projeção": ["Operador"],
+    "Introdução": ["Recepção 1", "Recepção 2"],
+    "Manutenção": ["Líder", "Auxiliar 1", "Auxiliar 2", "Auxiliar 3"]
+};
 
 const $ = (selector) => document.querySelector(selector);
+const tipoEscala = $("#tipoEscala");
 const mes = $("#mes");
 const ano = $("#ano");
 const lista = $("#lista");
@@ -803,14 +815,24 @@ function obterLogoSrc() {
 
 brandLogo.src = obterLogoSrc();
 
+Object.keys(CONFIG_ESCALAS).forEach((tipo) => tipoEscala.insertAdjacentHTML("beforeend", `<option>${tipo}</option>`));
 meses.forEach((m, i) => mes.insertAdjacentHTML("beforeend", `<option value="${i}">${m}</option>`));
 for (let a = 2024; a <= 2030; a++) ano.insertAdjacentHTML("beforeend", `<option>${a}</option>`);
 
+tipoEscala.value = "Cultos";
 mes.value = new Date().getMonth();
 ano.value = new Date().getFullYear();
 
+function tipoAtual() {
+    return tipoEscala.value || "Cultos";
+}
+
+function camposAtuais() {
+    return CONFIG_ESCALAS[tipoAtual()] || CONFIG_ESCALAS.Cultos;
+}
+
 function storageKey(a = ano.value, m = mes.value, d = "") {
-    return `${a}-${m}-${d}`;
+    return `${tipoAtual()}-${a}-${m}-${d}`;
 }
 
 function carregarPessoas() {
@@ -869,6 +891,7 @@ function obterCultos() {
         if (semana === 0 || semana === 4) {
             cultos.push({
                 id: storageKey(a, m, d),
+                legacyId: `${a}-${m}-${d}`,
                 dia: String(d).padStart(2, "0"),
                 diaNumero: d,
                 tipo: diasSemana[semana],
@@ -892,32 +915,30 @@ function atualizarResumo(cultos) {
 
 function gerar() {
     const cultos = obterCultos();
+    const campos = camposAtuais();
+    const nomeTipo = tipoAtual();
     atualizarResumo(cultos);
+    document.querySelector("h1").textContent = `Escala de ${nomeTipo}`;
 
     lista.innerHTML = cultos.map((culto) => `
-        <article class="card-app" data-id="${culto.id}">
+        <article class="card-app" data-id="${culto.id}" data-legacy-id="${culto.legacyId}">
             <div class="date-row">
                 <div class="date-badge">
                     <strong>${culto.dia}</strong>
                     <span>${culto.tipo}</span>
                 </div>
-                <div class="chip">Culto</div>
+                <div class="chip">${escapeHtml(nomeTipo)}</div>
             </div>
 
             <div class="grid">
-                <div class="field">
-                    <label for="dir-${culto.id}">Direção</label>
-                    <select id="dir-${culto.id}" data-tipo="dir" aria-label="Direção do dia ${culto.dia}">
-                        ${optionPessoas()}
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="preg-${culto.id}">Pregação</label>
-                    <select id="preg-${culto.id}" data-tipo="preg" aria-label="Pregação do dia ${culto.dia}">
-                        ${optionPessoas()}
-                    </select>
-                </div>
+                ${campos.map((campo, index) => `
+                    <div class="field">
+                        <label for="campo-${culto.id}-${index}">${escapeHtml(campo)}</label>
+                        <select id="campo-${culto.id}-${index}" data-campo-index="${index}" aria-label="${escapeHtml(campo)} do dia ${culto.dia}">
+                            ${optionPessoas()}
+                        </select>
+                    </div>
+                `).join("")}
             </div>
         </article>
     `).join("");
@@ -926,13 +947,17 @@ function gerar() {
 }
 
 function obterDados() {
+    return JSON.parse(localStorage.getItem("escala-dados") || "{}");
+}
+
+function obterDadosAntigosCultos() {
     return JSON.parse(localStorage.getItem("escala-cultos") || "{}");
 }
 
-function salvar(id, tipo, valor) {
+function salvar(id, campoIndex, valor) {
     const dados = obterDados();
-    dados[id] = { ...(dados[id] || {}), [tipo]: valor };
-    localStorage.setItem("escala-cultos", JSON.stringify(dados));
+    dados[id] = { ...(dados[id] || {}), [campoIndex]: valor };
+    localStorage.setItem("escala-dados", JSON.stringify(dados));
     statusEl.textContent = "Alteração salva automaticamente.";
     setTimeout(() => {
         if (statusEl.textContent === "Alteração salva automaticamente.") statusEl.textContent = "";
@@ -941,11 +966,17 @@ function salvar(id, tipo, valor) {
 
 function carregar() {
     const dados = obterDados();
+    const dadosAntigos = tipoAtual() === "Cultos" ? obterDadosAntigosCultos() : {};
 
     document.querySelectorAll(".card-app").forEach((card) => {
         const registro = dados[card.dataset.id] || {};
-        card.querySelector('[data-tipo="dir"]').value = registro.dir || "";
-        card.querySelector('[data-tipo="preg"]').value = registro.preg || "";
+        const registroAntigo = dadosAntigos[card.dataset.legacyId] || {};
+
+        card.querySelectorAll("[data-campo-index]").forEach((select) => {
+            const index = select.dataset.campoIndex;
+            const fallbackAntigo = index === "0" ? registroAntigo.dir : index === "1" ? registroAntigo.preg : "";
+            select.value = registro[index] || fallbackAntigo || "";
+        });
     });
 }
 
@@ -959,12 +990,16 @@ function escapeHtml(value) {
 }
 
 function dadosExportacao() {
+    const campos = camposAtuais();
+
     return obterCultos().map((culto) => {
         const card = document.querySelector(`[data-id="${culto.id}"]`);
         return {
             ...culto,
-            direcao: card?.querySelector('[data-tipo="dir"]')?.value || "-",
-            pregacao: card?.querySelector('[data-tipo="preg"]')?.value || "-"
+            campos: campos.map((campo, index) => ({
+                nome: campo,
+                valor: card?.querySelector(`[data-campo-index="${index}"]`)?.value || "-"
+            }))
         };
     });
 }
@@ -1069,6 +1104,7 @@ function montarExportacao() {
     const domingos = cultos.filter((culto) => culto.semana === 0).length;
     const quintas = cultos.filter((culto) => culto.semana === 4).length;
     const nomeMes = meses[Number(mes.value)].toUpperCase();
+    const nomeTipo = tipoAtual();
     const paleta = paletaAleatoria();
 
     area.innerHTML = `
@@ -1078,14 +1114,14 @@ function montarExportacao() {
                     <div class="export-head">
                         <img class="export-logo" src="${escapeHtml(obterLogoSrc())}" alt="" crossorigin="anonymous">
                         <div>
-                            <div class="export-kicker">Escala de Cultos</div>
+                            <div class="export-kicker">Escala de ${escapeHtml(nomeTipo)}</div>
                             <div class="export-title">${escapeHtml(nomeMes)}</div>
                         </div>
                         <div class="export-year">${escapeHtml(ano.value)}</div>
                     </div>
 
                     <div class="export-stats">
-                        <div class="export-stat"><span>Cultos</span><strong>${cultos.length}</strong></div>
+                        <div class="export-stat"><span>Datas</span><strong>${cultos.length}</strong></div>
                         <div class="export-stat"><span>Domingos</span><strong>${domingos}</strong></div>
                         <div class="export-stat"><span>Quintas</span><strong>${quintas}</strong></div>
                     </div>
@@ -1101,14 +1137,12 @@ function montarExportacao() {
                                 </div>
 
                                 <div class="export-roles">
-                                    <div class="export-role">
-                                        <span>Direção</span>
-                                        <strong>${escapeHtml(culto.direcao)}</strong>
-                                    </div>
-                                    <div class="export-role">
-                                        <span>Pregação</span>
-                                        <strong>${escapeHtml(culto.pregacao)}</strong>
-                                    </div>
+                                    ${culto.campos.map((campo) => `
+                                        <div class="export-role">
+                                            <span>${escapeHtml(campo.nome)}</span>
+                                            <strong>${escapeHtml(campo.valor)}</strong>
+                                        </div>
+                                    `).join("")}
                                 </div>
                             </div>
                         `).join("")}
@@ -1142,7 +1176,7 @@ async function prepararExportacao(area) {
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
 
-function baixarCanvas(canvas, nomeArquivo) {
+function canvasParaBlob(canvas) {
     return new Promise((resolve, reject) => {
         canvas.toBlob((blob) => {
             if (!blob) {
@@ -1150,17 +1184,37 @@ function baixarCanvas(canvas, nomeArquivo) {
                 return;
             }
 
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            link.download = nomeArquivo;
-            link.href = url;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            setTimeout(() => URL.revokeObjectURL(url), 1200);
-            resolve();
+            resolve(blob);
         }, "image/jpeg", 0.96);
     });
+}
+
+function baixarBlob(blob, nomeArquivo) {
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.download = nomeArquivo;
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+
+async function compartilharOuBaixar(canvas, nomeArquivo) {
+    const blob = await canvasParaBlob(canvas);
+    const arquivo = new File([blob], nomeArquivo, { type: "image/jpeg" });
+
+    if (navigator.canShare?.({ files: [arquivo] }) && navigator.share) {
+        await navigator.share({
+            files: [arquivo],
+            title: "Escala de Cultos",
+            text: "Escala mensal de cultos"
+        });
+        return "shared";
+    }
+
+    baixarBlob(blob, nomeArquivo);
+    return "downloaded";
 }
 
 async function exportar() {
@@ -1193,22 +1247,25 @@ async function exportar() {
         });
 
         const nomeMes = meses[Number(mes.value)].toLowerCase();
-        await baixarCanvas(canvas, `escala-${nomeMes}-${ano.value}-1080x1920.jpg`);
-        statusEl.textContent = "Imagem gerada em 1080 x 1920.";
+        const nomeTipo = tipoAtual().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+        const resultado = await compartilharOuBaixar(canvas, `escala-${nomeTipo}-${nomeMes}-${ano.value}-1080x1920.jpg`);
+        statusEl.textContent = resultado === "shared"
+            ? "Imagem pronta para compartilhar."
+            : "Compartilhamento indisponível. JPG baixado em 1080 x 1920.";
     } catch (error) {
         statusEl.textContent = `Não consegui gerar a imagem: ${error.message || "tente atualizar a página."}`;
         console.error(error);
     } finally {
         $("#exportArea").classList.remove("is-capturing");
         btnExportar.disabled = false;
-        btnExportar.textContent = "Gerar imagem 1080 x 1920";
+        btnExportar.textContent = "Compartilhar imagem 1080 x 1920";
     }
 }
 
 lista.addEventListener("change", (event) => {
-    const select = event.target.closest("select[data-tipo]");
+    const select = event.target.closest("select[data-campo-index]");
     if (!select) return;
-    salvar(select.closest(".card-app").dataset.id, select.dataset.tipo, select.value);
+    salvar(select.closest(".card-app").dataset.id, select.dataset.campoIndex, select.value);
 });
 
 formPessoa.addEventListener("submit", (event) => {
@@ -1224,6 +1281,7 @@ listaPessoas.addEventListener("click", (event) => {
     removerPessoa(Number(botao.dataset.index));
 });
 
+tipoEscala.addEventListener("change", gerar);
 mes.addEventListener("change", gerar);
 ano.addEventListener("change", gerar);
 btnExportar.addEventListener("click", exportar);
