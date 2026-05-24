@@ -543,19 +543,21 @@ select:focus {
 
 .export-stats {
     display: grid;
-    grid-template-row: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 0;
+    /* Altera de linhas (row) para 3 colunas iguais */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 16px;
+    margin-bottom: 8px; /* Pequeno ajuste de espaçamento */
 }
 
 .export-stat {
-    padding: 12px 16px;
+    padding: 16px 12px; /* Ajuste no preenchimento interno */
     border: 0;
-    border-radius: 12px;
+    border-radius: 18px; /* Deixa as pontas um pouco mais arredondadas combinando com o layout */
     background: var(--export-card);
     box-shadow: none;
     text-align: center;
 }
+
 
 .export-stat span {
     display: block;
